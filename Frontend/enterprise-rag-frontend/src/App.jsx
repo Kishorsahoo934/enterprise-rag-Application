@@ -190,7 +190,7 @@ export default function App() {
                   <span className="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
                   <span className="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
                 </span>
-                Querying FAISS + Groq Llama 3.3...
+                Querying FAISS
               </div>
             )}
             <div ref={chatEndRef} />
