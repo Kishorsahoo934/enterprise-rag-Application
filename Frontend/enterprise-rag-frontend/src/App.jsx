@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-// Change this to a relative path so the hosting platform handles the proxy translation
+// Production reverse-proxy abstraction path
 const BACKEND_URL = "/api";
 
 export default function App() {
@@ -13,15 +13,16 @@ export default function App() {
   
   const chatEndRef = useRef(null);
 
+  // Auto-scroll management
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle PDF file uploading via proxy path
+  // Document Ingestion Handler
   const handleFileUpload = async (e) => {
     e.preventDefault();
     if (!file) {
-      setUploadStatus("❌ Please select a PDF file first.");
+      setUploadStatus("❌ System Alert: Target file object required for ingestion initialization.");
       return;
     }
 
@@ -29,7 +30,7 @@ export default function App() {
     formData.append("file", file);
 
     setIsUploading(true);
-    setUploadStatus("⏳ Extracting text and embedding vectors on AWS...");
+    setUploadStatus("⏳ Pipeline Initialized: Extracting token vectors and mounting structural indices...");
 
     try {
       const response = await fetch(`${BACKEND_URL}/upload`, {
@@ -40,23 +41,23 @@ export default function App() {
       const data = await response.json();
 
       if (response.ok) {
-        setUploadStatus("✅ Document successfully indexed into Vector Database!");
+        setUploadStatus("✅ Success: Knowledge matrix mapped and synchronized with Vector DB.");
         setMessages([{ 
           sender: "ai", 
-          text: `Hi Kishor! I have successfully processed "${file.name}". Ask me anything about it!` 
-         }]);
+          text: `Data pipeline successfully established for workspace: "${file.name}". Dynamic context window is ready for execution mapping.` 
+        }]);
       } else {
-        setUploadStatus(`❌ Error: ${data.detail || "Upload failed"}`);
+        setUploadStatus(`❌ Pipeline Fault: ${data.detail || "Ingestion sequence terminated."}`);
       }
     } catch (err) {
-      setUploadStatus("❌ Network error connecting to AWS backend.");
+      setUploadStatus("❌ Network Exception: Routing failure through secure ingress gateway.");
       console.error(err);
     } finally {
       setIsUploading(false);
     }
   };
 
-  // Handle asking questions via GET proxy path
+  // Hybrid Search Execution Loop
   const handleAskQuestion = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
@@ -91,15 +92,15 @@ export default function App() {
           });
 
           const uniqueSources = [...new Set(cleanedSources)];
-          aiResponse += `\n\n📄 (Sources: ${uniqueSources.join(", ")})`;
+          aiResponse += `\n\n📄 [Context Validation: ${uniqueSources.join(", ")}]`;
         }
         
         setMessages((prev) => [...prev, { sender: "ai", text: aiResponse }]);
       } else {
-        setMessages((prev) => [...prev, { sender: "ai", text: "❌ Failed to fetch an answer from the backend system." }]);
+        setMessages((prev) => [...prev, { sender: "ai", text: "❌ Analytics Error: Prompt synthesis blocked by node execution failure." }]);
       }
     } catch (err) {
-      setMessages((prev) => [...prev, { sender: "ai", text: "❌ Network error. Check your server connection." }]);
+      setMessages((prev) => [...prev, { sender: "ai", text: "❌ Gateway Exception: Connection broken during query handshake." }]);
       console.error(err);
     } finally {
       setIsLoadingAnswer(false);
@@ -107,29 +108,44 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col font-sans">
-      <header className="bg-gray-800 border-b border-gray-700 p-4 shadow-md">
-        <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold tracking-wide text-indigo-400">
-            Enterprise RAG Terminal
-          </h1>
-          <div className="text-sm text-gray-400 flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            AWS Connected
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased">
+      {/* Sleek Enterprise Top Navigation */}
+      <header className="bg-slate-900 border-b border-slate-800 p-4 shadow-sm backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="bg-indigo-600/10 text-indigo-400 p-2 rounded-lg border border-indigo-500/20">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            </div>
+            <h1 className="text-lg font-semibold tracking-tight text-slate-200">
+              Cognitive Insight Engine <span className="text-xs font-mono font-medium px-2 py-0.5 ml-2 rounded-full bg-slate-800 text-slate-400 border border-slate-700">v1.1.0</span>
+            </h1>
+          </div>
+          <div className="text-xs font-mono font-medium text-slate-400 bg-slate-950 px-3 py-1.5 rounded-md border border-slate-800 flex items-center gap-2.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+            Cloud Gateway: Operational
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-5xl w-full mx-auto p-4 flex flex-col md:flex-row gap-6 overflow-hidden">
-        <section className="w-full md:w-1/3 bg-gray-800 p-5 rounded-xl border border-gray-700 h-fit flex flex-col gap-4">
-          <h2 className="text-lg font-semibold text-gray-200 border-b border-gray-700 pb-2">
-            Document Setup
-          </h2>
+      {/* Modern Main Workspace Layout */}
+      <main className="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 flex flex-col md:flex-row gap-6 overflow-hidden">
+        
+        {/* Left Control Column: Knowledge Ingestion Panel */}
+        <section className="w-full md:w-80 bg-slate-900 p-5 rounded-xl border border-slate-800 h-fit flex flex-col gap-5 shadow-xl">
+          <div>
+            <h2 className="text-sm font-semibold tracking-wider uppercase text-slate-400">
+              Knowledge Ingestion
+            </h2>
+            <p className="text-xs text-slate-500 mt-1">
+              Mount source materials to seed the distributed semantic index.
+            </p>
+          </div>
+
           <form onSubmit={handleFileUpload} className="flex flex-col gap-3">
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-600 rounded-lg p-4 cursor-pointer hover:border-indigo-500 bg-gray-750 transition-colors">
-              <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-              <span className="text-sm text-gray-300 font-medium">
-                {file ? file.name : "Select PDF Knowledge Base"}
+            <label className="flex flex-col items-center justify-center border border-dashed border-slate-700 hover:border-indigo-500/50 rounded-xl p-6 cursor-pointer bg-slate-950/50 hover:bg-slate-950 transition-all group">
+              <svg className="w-6 h-6 text-slate-500 group-hover:text-indigo-400 mb-2.5 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              <span className="text-xs text-slate-400 group-hover:text-slate-200 text-center truncate max-w-full font-medium">
+                {file ? file.name : "Select Source Document (PDF)"}
               </span>
               <input 
                 type="file" 
@@ -142,41 +158,47 @@ export default function App() {
             <button
               type="submit"
               disabled={isUploading}
-              className={`w-full py-2.5 px-4 rounded-lg font-semibold shadow text-white transition-all ${
+              className={`w-full py-2.5 px-4 rounded-lg text-xs font-semibold shadow-sm text-white tracking-wide transition-all ${
                 isUploading 
                   ? "bg-indigo-700 opacity-50 cursor-not-allowed" 
-                  : "bg-indigo-600 hover:bg-indigo-500 active:translate-y-0.5"
+                  : "bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98]"
               }`}
             >
-              {isUploading ? "Processing Document..." : "Build Knowledge Index"}
+              {isUploading ? "Syncing Vector Maps..." : "Execute Matrix Ingestion"}
             </button>
           </form>
+
           {uploadStatus && (
-            <div className="text-xs bg-gray-850 p-3 rounded border border-gray-750 break-words leading-relaxed">
+            <div className="text-[11px] font-mono bg-slate-950 p-3 rounded-lg border border-slate-800 break-words text-slate-400 leading-relaxed">
               {uploadStatus}
             </div>
           )}
         </section>
 
-        <section className="flex-1 bg-gray-800 rounded-xl border border-gray-700 flex flex-col h-[70vh] md:h-auto overflow-hidden">
-          <div className="bg-gray-750 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
-            <h3 className="font-medium text-gray-200">Intelligence Agent Console</h3>
+        {/* Right Control Column: Operational Console Panel */}
+        <section className="flex-1 bg-slate-900 rounded-xl border border-slate-800 flex flex-col h-[65vh] md:h-auto overflow-hidden shadow-xl">
+          <div className="bg-slate-950 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+            <h3 className="text-xs font-semibold tracking-wider uppercase text-slate-400">Contextual Query Console</h3>
+            <span className="text-[10px] font-mono bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-500">
+              Llama-3.3 // FAISS Hybrid Optimized
+            </span>
           </div>
 
-          <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 space-y-1">
+          {/* Core Chat Output Loop */}
+          <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-4">
             {messages.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-gray-500 text-sm gap-2">
-                <svg className="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12" strokeWidth="2"></path></svg>
-                Upload a document to ignite the semantic pipeline.
+              <div className="flex-1 flex flex-col items-center justify-center text-slate-500 text-xs gap-3">
+                <svg className="w-8 h-8 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                Console inactive. Complete data ingestion mapping to start telemetry searches.
               </div>
             ) : (
               messages.map((msg, index) => (
                 <div 
                   key={index} 
-                  className={`max-w-[80%] rounded-xl px-4 py-2.5 whitespace-pre-wrap text-sm shadow leading-relaxed ${
+                  className={`max-w-[85%] rounded-xl px-4 py-3 whitespace-pre-wrap text-xs shadow-sm leading-relaxed tracking-wide ${
                     msg.sender === 'user' 
                       ? 'bg-indigo-600 text-white self-end rounded-tr-none' 
-                      : 'bg-gray-700 text-gray-100 self-start rounded-tl-none border border-gray-600'
+                      : 'bg-slate-950 text-slate-300 self-start rounded-tl-none border border-slate-800'
                   }`}
                 >
                   {msg.text}
@@ -184,33 +206,34 @@ export default function App() {
               ))
             )}
             {isLoadingAnswer && (
-              <div className="bg-gray-700 border border-gray-600 text-gray-400 self-start rounded-xl rounded-tl-none px-4 py-2.5 text-sm flex items-center gap-2 shadow">
+              <div className="bg-slate-950 border border-slate-800 text-slate-500 self-start rounded-xl rounded-tl-none px-4 py-3 text-xs flex items-center gap-2.5 shadow-sm">
                 <span className="flex gap-1">
-                  <span className="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce"></span>
-                  <span className="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                  <span className="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                  <span className="h-1.5 w-1.5 bg-slate-600 rounded-full animate-bounce"></span>
+                  <span className="h-1.5 w-1.5 bg-slate-600 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                  <span className="h-1.5 w-1.5 bg-slate-600 rounded-full animate-bounce [animation-delay:0.4s]"></span>
                 </span>
-                Querying FAISS
+                Cross-referencing BM25 / Vector matrices...
               </div>
             )}
             <div ref={chatEndRef} />
           </div>
 
-          <form onSubmit={handleAskQuestion} className="p-3 border-t border-gray-700 bg-gray-750 flex gap-2">
+          {/* Secure Input Dock */}
+          <form onSubmit={handleAskQuestion} className="p-3 border-t border-slate-800 bg-slate-950 flex gap-2">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ask an analytical question..."
+              placeholder="Submit transactional pipeline query..."
               disabled={isLoadingAnswer}
-              className="flex-1 bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-sm text-gray-100 focus:outline-none focus:border-indigo-500 placeholder-gray-500 disabled:opacity-50"
+              className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 placeholder-slate-600 disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={isLoadingAnswer || !query.trim()}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 rounded-lg text-xs font-semibold tracking-wide transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              Send
+              Execute
             </button>
           </form>
         </section>
