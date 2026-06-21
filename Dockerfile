@@ -3,7 +3,7 @@ FROM python:3.10-slim
 # Install system-level dependencies for Poppler (PDF conversion) and OpenCV (EasyOCR requirement)
 RUN apt-get update && apt-get install -y \
     poppler-utils \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
@@ -23,5 +23,5 @@ COPY . .
 # Expose FastAPI's standard port
 EXPOSE 8000
 
-# Start Uvicorn bound to 0.0.0.0 so Render can route public traffic to it
+# Start Uvicorn bound to 0.0.0.0
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
