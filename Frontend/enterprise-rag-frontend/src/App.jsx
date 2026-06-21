@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-// CSS is imported in main.jsx, no need to import it again here
-// Replace this with your exact live AWS EC2 backend address
-const BACKEND_URL = "http://13.222.192.169:8000";
+
+// Change this to a relative path so the hosting platform handles the proxy translation
+const BACKEND_URL = "/api";
 
 export default function App() {
   const [file, setFile] = useState(null);
@@ -13,12 +13,11 @@ export default function App() {
   
   const chatEndRef = useRef(null);
 
-  // Auto-scroll to the bottom of the chat whenever a new message appears
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle PDF file uploading
+  // Handle PDF file uploading via proxy path
   const handleFileUpload = async (e) => {
     e.preventDefault();
     if (!file) {
@@ -45,7 +44,7 @@ export default function App() {
         setMessages([{ 
           sender: "ai", 
           text: `Hi Kishor! I have successfully processed "${file.name}". Ask me anything about it!` 
-        }]);
+         }]);
       } else {
         setUploadStatus(`❌ Error: ${data.detail || "Upload failed"}`);
       }
@@ -56,7 +55,8 @@ export default function App() {
       setIsUploading(false);
     }
   };
-  // Handle asking questions using a GET request
+
+  // Handle asking questions via GET proxy path
   const handleAskQuestion = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
@@ -80,12 +80,8 @@ export default function App() {
         let aiResponse = data.answer;
         
         if (data.sources && data.sources.length > 0) {
-          // 1. Process and clean up each messy string
           const cleanedSources = data.sources.map(src => {
-            // Remove "./uploads/" or "uploads/" paths
             let cleanStr = src.replace(/^\.\/uploads\/|^uploads\//i, "");
-            
-            // Turn "page 0" into "Page 1" for a better look
             if (cleanStr.includes("page 0")) {
               cleanStr = cleanStr.replace("page 0", "Page 1");
             } else {
@@ -94,10 +90,7 @@ export default function App() {
             return cleanStr;
           });
 
-          // 2. Remove all duplicates from the array
           const uniqueSources = [...new Set(cleanedSources)];
-
-          // 3. Format it beautifully below the answer
           aiResponse += `\n\n📄 (Sources: ${uniqueSources.join(", ")})`;
         }
         
@@ -115,7 +108,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col font-sans">
-      {/* Top Navbar */}
       <header className="bg-gray-800 border-b border-gray-700 p-4 shadow-md">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold tracking-wide text-indigo-400">
@@ -128,10 +120,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Workspace Layout */}
       <main className="flex-1 max-w-5xl w-full mx-auto p-4 flex flex-col md:flex-row gap-6 overflow-hidden">
-        
-        {/* Left Side: Upload Control Panel */}
         <section className="w-full md:w-1/3 bg-gray-800 p-5 rounded-xl border border-gray-700 h-fit flex flex-col gap-4">
           <h2 className="text-lg font-semibold text-gray-200 border-b border-gray-700 pb-2">
             Document Setup
@@ -169,17 +158,15 @@ export default function App() {
           )}
         </section>
 
-        {/* Right Side: Interactive Hybrid Chat Terminal */}
         <section className="flex-1 bg-gray-800 rounded-xl border border-gray-700 flex flex-col h-[70vh] md:h-auto overflow-hidden">
           <div className="bg-gray-750 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
             <h3 className="font-medium text-gray-200">Intelligence Agent Console</h3>
           </div>
 
-          {/* Chat Messages Display Box */}
           <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 space-y-1">
             {messages.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center text-gray-500 text-sm gap-2">
-                <svg className="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12 Tri" strokeWidth="2"></path></svg>
+                <svg className="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12" strokeWidth="2"></path></svg>
                 Upload a document to ignite the semantic pipeline.
               </div>
             ) : (
@@ -209,7 +196,6 @@ export default function App() {
             <div ref={chatEndRef} />
           </div>
 
-          {/* User Input Prompt Footer */}
           <form onSubmit={handleAskQuestion} className="p-3 border-t border-gray-700 bg-gray-750 flex gap-2">
             <input
               type="text"
