@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-dotenv
+langchain
+langchain-community
+langchain-groq
+langchain-text-splitters
+faiss-cpu
+rank_bm25
+pypdf
+easyocr
+pdf2image
+python-multipart
