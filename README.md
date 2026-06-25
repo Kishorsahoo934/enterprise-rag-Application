@@ -1,4 +1,4 @@
-# 🚀 Enterprise Hybrid RAG Terminal
+# 🚀 Algo-Docs
 
 An advanced, production-ready **Hybrid Retrieval-Augmented Generation (RAG)** system built to process dense structural and sparse contextual intelligence from enterprise data. The architecture implements an asymmetric search framework combining semantic vector space retrieval with localized keyword relevance models, deployed seamlessly within an isolated container ecosystem on AWS EC2.
 
